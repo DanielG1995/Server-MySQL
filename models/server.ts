@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import userRoutes from '../routes/usuarios'
 import cors from 'cors';
+import db from '../db/config';
 class Server {
 
     private app: Application;
@@ -11,8 +12,18 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '8000';
+        this.dbConnection();
         this.routes();
         this.middlewares();
+    }
+
+    async dbConnection() {
+        try {
+            await db.authenticate();
+        } catch (error) {
+            throw new Error("ERROR:"+error);
+
+        }
     }
 
     //Funciones antes de otros procedimientos
